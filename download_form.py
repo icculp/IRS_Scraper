@@ -27,6 +27,7 @@ def download_forms(form, min_year, max_year):
     elem.send_keys(form)
     elem.send_keys(Keys.RETURN)
 
+    print("Starting...")
     while (1):
         try:
             for i in range(2, 27):
@@ -50,10 +51,11 @@ def download_forms(form, min_year, max_year):
                         #filename = filename.replace(' ', '_')
                         print(filename)
                         open(filename, 'wb').write(r.content)
-
+            print("Next page...")
             browser.find_element_by_link_text('Next »').click()
         except Exception as e:
-            #print("exception!!!, {}".format(e))
+            print("If fail this error might be important:, {}".format(e))
+            print("Wrapping up...")
             break
     print("Script finished")
 
