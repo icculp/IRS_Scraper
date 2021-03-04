@@ -1,5 +1,4 @@
-Initially wrote and tested in ubuntu xenial 16.04 with python 3.5.2
-Tested in ubuntu 20.04? 18.04? with python 3.8? DO THIS
+Wrote and tested in ubuntu xenial 16.04 with python 3.5.2
 
 Run chrome_driver.sh to install chrome_driver and the chromium_browser which includes all of the dependecies chrome_driver might need
 Run requirements.txt to install python3 pip packages
