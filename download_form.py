@@ -53,7 +53,7 @@ def download_forms(form, min_year, max_year):
 
             browser.find_element_by_link_text('Next »').click()
         except Exception as e:
-            print("exception!!!, {}".format(e))
+            #print("exception!!!, {}".format(e))
             break
     print("Script finished")
 
