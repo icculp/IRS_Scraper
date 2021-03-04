@@ -4,6 +4,7 @@
 """
 import json
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 
 def information(forms):
@@ -32,28 +33,62 @@ def information(forms):
 
     ret = []
     for form in forms:
+        browser.get('https://apps.irs.gov/app/picklist/list/priorFormPublication.html')
         elem = browser.find_element_by_css_selector('#searchFor')
         elem.send_keys(form)
         elem.send_keys(Keys.RETURN)
 
-        #picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(2) > td.LeftCellSpacer
-        selector = '#picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(' + str(i) + ')'
-        selected = find_element_by_css_selector(selector)
-        for s in selected:
-            print(s)
-        '''
+        d = dict()
+        year_list = []
+
+        #selector = '#picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(' + str(2) + ')'
+        #selected = browser.find_element_by_css_selector(selector)
+        #print(selected.text)
+        #for s in selected:
+        #    print(s)
         while (1):
             try:
+                #picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(2) > td.LeftCellSpacer
+                for i in range(2, 27):
+                    product = '#picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(' + str(i) + ') > td.LeftCellSpacer'
+                    product = browser.find_element_by_css_selector(product)
+                    #print("[{}]".format(product.text))
+                    title = '#picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(' + str(i) + ') > td.MiddleCellSpacer'
+                    title = browser.find_element_by_css_selector(title)
+                    #print("[{}]".format(title.text))
+                    year = '#picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(' + str(i) + ') > td.EndCellSpacer'
+                    year = browser.find_element_by_css_selector(year)
+                    #print("[{}]".format(year.text))
+                    #print("form: [{}], product: [{}]\ntitle: [{}], year: [{}]".format(form, product.text, title.text, year.text))
+                    if product.text == form:
+                        #print("formy: {}".format(title.text))
+                        d = dict()
+                        #print(65)
+                        year_list.append(int(year.text))
+                        #print(67)
+                        #print('yearlistnow {}'.format(year_list))
+                        d.update({'form_number': form, 'form_title': title.text, 'min_year': year_list, 'max_year': -1})
+
                 browser.find_element_by_link_text('Next »').click()
-                cells = browser.find_elements_by_css_selector("#ctl00_ContentPlaceHolder1_GridView1 > tbody > tr > td:nth-child(7)")
-                [addresses.append(x.text) for x in cells if x.text != ' ']
-            except:
+            except Exception as e:
+                #print('breaking............ {}'.format(e))
+                #d.update({'form_number': form, 'form_title': title.text, 'min_year': year_list, 'max_year': -1})
+                if len(d) is not 0:
+                    ret.append(d)
                 break
 
-        d = dict()
-        ret.append(d.update({'form_number': form, 'form_title': '', 'min_year': -1, 'max_year': -1}))
-        '''
+    #print("ret is: {}".format(ret))
+    for di in ret:
+        year_l = di['min_year']
+        di['min_year'] = min(year_l)
+        di['max_year'] = max(year_l)
+    return ret
+
 
 if __name__ == '__main__':
-    form = 'Form W-2'
-    information(form)
+    forms = ['Form W-2', 'Form W-2 P', 'Doesnt exist']
+    filename = 'information.json'
+    jayson = information(forms)
+    print(jayson)
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(jayson, f)
