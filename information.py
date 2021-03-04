@@ -40,6 +40,7 @@ def information(forms):
 
         d = dict()
         year_list = []
+        print("Starting...")
 
         #selector = '#picklistContentPane > div.picklistTable > table > tbody > tr:nth-child(' + str(2) + ')'
         #selected = browser.find_element_by_css_selector(selector)
@@ -68,10 +69,11 @@ def information(forms):
                         #print(67)
                         #print('yearlistnow {}'.format(year_list))
                         d.update({'form_number': form, 'form_title': title.text, 'min_year': year_list, 'max_year': -1})
-
+                print("Next page...")
                 browser.find_element_by_link_text('Next »').click()
             except Exception as e:
-                #print('breaking............ {}'.format(e))
+                print('If fail this error might be important: {}'.format(e))
+                print("Wrapping up...")
                 #d.update({'form_number': form, 'form_title': title.text, 'min_year': year_list, 'max_year': -1})
                 if len(d) is not 0:
                     ret.append(d)
